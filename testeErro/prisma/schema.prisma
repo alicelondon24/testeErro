@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model usuario {
+  usuario_id        Int      @id @default(autoincrement())
+  usuario_nome      String?  @db.VarChar(300)
+  usuario_email     String?  @db.VarChar(100)
+  usuario_cpf       String?  @db.VarChar(11)
+  usuario_cnpj      String   @db.VarChar(14)
+  usuario_endereco  String?  @db.VarChar(100)
+  usuario_status    Int?
+  usuario_cargo     String?  @db.VarChar(45)
+  usuario_tipo      Int      @default(1)
+  empresa           empresa? @relation(fields: [empresa_id], references: [empresa_id])
+  empresa_id Int?
+
+  @@index([empresa_id], map: "fk_usuario_empresa1_idx")
+}
+
+model empresa {
+  empresa_id   Int       @id @default(autoincrement())
+  empresa_nome String?   @db.VarChar(300)
+  empresa_cnpj String?   @db.VarChar(14)
+  usuario      usuario[]
+}
+
+model permissionamento {
+  permissionamento_id   Int         @id @default(autoincrement())
+  permissionamento_tipo String?     @db.VarChar(4)
+  // projeto               projeto?    @relation(fields: [projeto_id], references: [projeto_id])
+  projeto_id            Int?
+  // disciplina            disciplina? @relation(fields: [disciplina_id], references: [disciplina_id])
+  disciplina_id         Int?
+  // grupo                 grupo?      @relation(fields: [grupo_id], references: [grupo_id])
+  grupo_id              Int?
+  // arquivo               arquivo?    @relation(fields: [arquivo_id], references: [arquivo_id])
+  arquivo_id            String?
+  // etapa                 etapa?      @relation(fields: [etapa_id], references: [etapa_id])
+  etapa_id              Int?
+
+  // @@index([projeto_id], map: "fk_permissionamento_projeto1_idx")
+  // @@index([disciplina_id], map: "fk_permissionamento_disciplina1_idx")
+  // @@index([grupo_id], map: "fk_permissionamento_grupo1_idx")
+  // @@index([arquivo_id], map: "fk_permissionamento_arquivo1_idx")
+  // @@index([etapa_id], map: "fk_permissionamento_etapa1_idx")
+}
